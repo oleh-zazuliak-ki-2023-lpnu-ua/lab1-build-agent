@@ -1,0 +1,14 @@
+build/
+dist/
+out/
+cmake-build-*/
+.vs/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+CMakeUserPresets.json
+*.exe
+*.o
+*.obj
+.DS_Store
+.env
