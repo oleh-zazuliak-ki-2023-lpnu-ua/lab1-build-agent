@@ -1,6 +1,6 @@
 ---
 name: github-actions
-description: Створює скрипти збірки ci.sh / ci.bat та GitHub Actions workflow .github/workflows/ci.yml з matrix Windows/Linux/macOS, який лише викликає ці скрипти і зберігає виконувані файли як artifacts.
+description: Створює скрипти збірки ci.sh / ci.bat, .gitattributes та GitHub Actions workflow .github/workflows/ci.yml з matrix Windows/Linux/macOS, який лише викликає ці скрипти і зберігає виконувані файли як artifacts.
 ---
 
 # Skill: github-actions
@@ -24,10 +24,18 @@ description: Створює скрипти збірки ci.sh / ci.bat та GitH
 Уся логіка конфігурації, складання, тестування та пакування — у скриптах,
 тому локальний запуск і CI ідентичні.
 
+Файл `.gitattributes` фіксує закінчення рядків скриптів:
+
+```gitattributes
+*.sh text eol=lf
+*.bat text eol=crlf
+```
+
 ## Виходи
 ```
 ci.sh                       # Linux/macOS, виконуваний (chmod +x / git update-index --chmod=+x)
 ci.bat                      # Windows
+.gitattributes              # LF для shell-скриптів, CRLF для batch-скриптів
 .github/workflows/ci.yml
 ```
 
@@ -152,6 +160,7 @@ jobs:
 ```
 
 ## Перевірки
+- `.gitattributes` існує і містить рівно рядки `*.sh text eol=lf` та `*.bat text eol=crlf`;
 - YAML валідний: `python -c "import yaml,sys; yaml.safe_load(open('.github/workflows/ci.yml'))"`
   (або розширення *GitHub Actions* у VS Code не показує помилок);
 - у файлі є всі три ОС: `ubuntu-latest`, `windows-latest`, `macos-latest`;
@@ -166,6 +175,7 @@ jobs:
 ```
 ci.sh                     CREATED (+x)
 ci.bat                    CREATED
+.gitattributes            CREATED
 .github/workflows/ci.yml  CREATED
 yaml: OK, matrix: 3 OS, local ci.sh: exit 0
 ```

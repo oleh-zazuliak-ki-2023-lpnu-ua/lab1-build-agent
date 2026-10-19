@@ -15,6 +15,16 @@ description: Перевіряє структуру агента та проєк�
 ## Передумови
 Немає. Відсутній файл = провалена перевірка, а не помилка команди.
 
+## Кодування під час пошуку
+Усі пошуки тексту в PowerShell виконуй з явним UTF-8:
+
+- `Get-Content -Encoding UTF8 <file>`
+- `Select-String -Encoding UTF8 -Path <file> -Pattern <pattern>`
+
+Для пошуку тексту в кількох файлах можна використовувати `git grep`. Не покладайся
+на кодування PowerShell за замовчуванням, оскільки воно може неправильно прочитати
+кирилицю у UTF-8-файлах і спричинити хибний `FAIL`.
+
 ## Перевірки (виконай усі, не зупиняйся на першій невдачі)
 | # | Перевірка | Як |
 |---|---|---|
@@ -30,6 +40,7 @@ description: Перевіряє структуру агента та проєк�
 | 10 | `build/`, `dist/` не відстежуються Git | `git ls-files build dist` → порожньо; `git check-ignore build` |
 | 11 | Немає секретів | `git grep -nIiE "(api[_-]?key\|token\|password\|secret)\s*[:=]"` → порожньо |
 | 12 | Документація існує | `README.md`, `docs/architecture.md`, `docs/usage.md`, `docs/ai-log.md` |
+| 13 | Налаштування line endings існують | `.gitattributes` містить рівно `*.sh text eol=lf` і `*.bat text eol=crlf` |
 
 ## Формат звіту
 ```
@@ -38,6 +49,6 @@ description: Перевіряє структуру агента та проєк�
 | 1 | manifest  | ✅ PASS | |
 | 8 | tests     | ❌ FAIL | MathTest.BasicAddition: expected 5, got 6 |
 ...
-[check] PASSED (12/12)      або      [check] FAILED (10/12): #8, #11
+[check] PASSED (13/13)      або      [check] FAILED (11/13): #8, #11
 ```
 Статус `PASSED` лише якщо пройшли ВСІ перевірки.
